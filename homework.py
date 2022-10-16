@@ -73,7 +73,7 @@ class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     CALORIES_WEIGHT_MULTIPLIER_1 = 0.035
     CALORIES_WEIGHT_MULTIPLIER_2 = 0.029
-    CALORIES_WEIGHT_MULTIPLIER_3 = 2
+    CALORIES_WEIGHT_MULTIPLIER = 2
 
     def __init__(self,
                  action: int,
