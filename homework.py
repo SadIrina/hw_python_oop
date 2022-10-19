@@ -4,7 +4,7 @@ from typing import ClassVar, Type
 
 @dataclass(init=True, repr=False, eq=False,
            order=False, unsafe_hash=False,
-           frozen=False, kw_only=False, slots=False)
+           frozen=False, slots=False)
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     training_type: str  # вид тренировки
