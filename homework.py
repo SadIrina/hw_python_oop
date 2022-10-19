@@ -8,19 +8,19 @@ from typing import ClassVar, Type
            kw_only=False, slots=False)
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    TRAINING_TYPE: str  # вид тренировки
-    DURATION: float     # длительность тренировки в часах
-    DISTANCE: float     # дистанция в километрах
-    SPEED: float        # средняя скорость
-    CALORIES: float     # количество израсходованных килокалорий
-    Message: ClassVar[str] = ('Тип тренировки: {TRAINING_TYPE};'
-                              'Длительность: {DURATION:.3f} ч.;'
-                              'Дистанция: {DISTANCE:.3f} км'
-                              'Ср. скорость: {SPEED:.3f} км/ч;'
-                              'Потрачено ккал: {CALORIES:.3f}.')
+    training_type: str  # вид тренировки
+    duration: float     # длительность тренировки в часах
+    distance: float     # дистанция в километрах
+    speed: float        # средняя скорость
+    calories: float     # количество израсходованных килокалорий
+    MESSAGE: ClassVar[str] = ('Тип тренировки: {training_type};'
+                              'Длительность: {duration:.3f} ч.;'
+                              'Дистанция: {distance:.3f} км'
+                              'Ср. скорость: {speed:.3f} км/ч;'
+                              'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self) -> str:
-        return self.Message.format(**asdict(self))
+        return self.MESSAGE.format(**asdict(self))
 
 
 class Training:
@@ -32,12 +32,12 @@ class Training:
 
     def __init__(self,
                  action: int,
-                 DURATION: float,
+                 duration: float,
                  weight: float
                  ) -> None:
 
         self.action = action     # количество действий за тренировку
-        self.DURATION = DURATION
+        self.duration = duration
         self.weight = weight     # вес пользователя
 
     def get_distance(self) -> float:
@@ -46,7 +46,7 @@ class Training:
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        return self.get_distance() / self.DURATION
+        return self.get_distance() / self.duration
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
@@ -56,7 +56,7 @@ class Training:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
         return InfoMessage(self.__class__.__name__,
-                           self.DURATION,
+                           self.duration,
                            self.get_distance(),
                            self.get_mean_speed(),
                            self.get_spent_calories())
@@ -72,7 +72,7 @@ class Running(Training):
         """Получить количество затраченных калорий."""
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
                 + self.CALORIES_MEAN_SPEED_SHIFT) * self.weight
-                / self.M_IN_KM * self.DURATION * self.MIN_IN_H)
+                / self.M_IN_KM * self.duration * self.MIN_IN_H)
 
 
 class SportsWalking(Training):
@@ -86,11 +86,11 @@ class SportsWalking(Training):
 
     def __init__(self,
                  action: int,
-                 DURATION: float,
+                 duration: float,
                  weight: float,
                  height: float) -> None:
 
-        super().__init__(action, DURATION, weight)
+        super().__init__(action, duration, weight)
         self.height = height            # рост пользователя
 
     def get_spent_calories(self) -> float:
@@ -100,7 +100,7 @@ class SportsWalking(Training):
                 + ((self.get_mean_speed() * self.KMH_IN_MSEC)
                  ** 2 / (self.height / self.CM_IN_M))
                 * self.CALORIES_SPEED_HEIGHT_MULTIPLIER
-                * self.weight) * self.DURATION * self.MIN_IN_H)
+                * self.weight) * self.duration * self.MIN_IN_H)
 
 
 class Swimming(Training):
@@ -112,13 +112,13 @@ class Swimming(Training):
 
     def __init__(self,
                  action: int,
-                 DURATION: float,
+                 duration: float,
                  weight: float,
                  length_pool: float,
                  count_pool: int
                  ) -> None:
 
-        super().__init__(action, DURATION, weight)
+        super().__init__(action, duration, weight)
 
         self.length_pool = length_pool      # длина бассейна в м
         self.count_pool = count_pool        # сколько раз переплыл бассейн
@@ -126,13 +126,13 @@ class Swimming(Training):
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
         return (self.length_pool * self.count_pool
-                / self.M_IN_KM / self.DURATION)
+                / self.M_IN_KM / self.duration)
 
     def get_spent_calories(self) -> float:
         return ((self.get_mean_speed()
                  + self.CALORIES_MEAN_SPEED_SHIFT)
                 * self.CALORIES_WEIGHT_MULTIPLIER * self.weight
-                * self.DURATION)
+                * self.duration)
 
 
 def read_package(workout_type: str, data: list) -> Training:
