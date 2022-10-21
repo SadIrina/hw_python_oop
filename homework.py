@@ -1,10 +1,9 @@
 from dataclasses import asdict, dataclass
-from typing import ClassVar, Type
+from typing import ClassVar
 
 
-@dataclass(init=True, repr=False, eq=False,
-           order=False, unsafe_hash=False,
-           frozen=False)
+@dataclass(init=True, order=False,
+           unsafe_hash=False, frozen=False)
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     training_type: str  # вид тренировки
@@ -137,12 +136,12 @@ class Swimming(Training):
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
 
-    Dict: Dict[str, Type[Training]] = {
+    type_dict: dict[str, type[Training]] = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking
     }
-    return Dict[workout_type](*data)
+    return type_dict[workout_type](*data)
 
 
 def main(training: Training) -> None:
